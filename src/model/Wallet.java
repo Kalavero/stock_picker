@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Wallet implements Serializable {
     private int id;
-    private int user_id;
+    private int userId;
     private String name;
     private String description;
 
@@ -16,12 +16,12 @@ public class Wallet implements Serializable {
         this.id = id;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getName() {

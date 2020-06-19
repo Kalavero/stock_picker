@@ -1,6 +1,6 @@
 package dao;
 
-import model.Stock;
+import model.Wallet;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
@@ -8,30 +8,30 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class StockDAO {
+public class WalletDAO {
     private DataSource dataSource;
 
-    public StockDAO(DataSource dataSource){
+    public WalletDAO(DataSource dataSource){
         this.dataSource = dataSource;
     }
 
-    public ArrayList<Stock> all(){
+    public ArrayList<Wallet> all(){
         try{
-            String query = "SELECT * FROM stocks";
+            String query = "SELECT * FROM wallets";
             PreparedStatement ps = dataSource.getConnection().prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
-            ArrayList<Stock> stocks = new ArrayList<Stock>();
+            ArrayList<Wallet> wallets = new ArrayList<Wallet>();
 
             while(rs.next()) {
-                Stock stock = setStock(rs);
+                Wallet wallet = setWallet(rs);
 
-                stocks.add(stock);
+                wallets.add(wallet);
             }
 
             ps.close();
 
-            return stocks;
+            return wallets;
         }
         catch(SQLException ex){
             System.err.println("Error getting " + ex.getMessage());
@@ -42,18 +42,18 @@ public class StockDAO {
         return null;
     }
 
-    public Stock find(int id){
+    public Wallet find(int id){
         try {
-            String sql = "SELECT * FROM stocks WHERE id = ? LIMIT 1";
+            String sql = "SELECT * FROM wallets WHERE id = ? LIMIT 1";
             PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
-            Stock stock = setStock(rs);
+            Wallet wallet = setWallet(rs);
 
             ps.close();
 
-            return stock;
+            return wallet;
         }
         catch(SQLException ex){
             System.err.println("Error getting " + ex.getMessage());
@@ -64,13 +64,14 @@ public class StockDAO {
         return null;
     }
 
-    public boolean save(Stock stock){
+    public boolean save(Wallet wallet){
         try {
-            String sql = "INSERT INTO stocks (code, price)"
-                    + "VALUES(?, ?)";
+            String sql = "INSERT INTO wallets (user_id, name, description)"
+                    + "VALUES(?, ?, ?)";
             PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
-            ps.setInt(1, stock.getCode());
-            ps.setDouble(2, stock.getPrice());
+            ps.setInt(1, wallet.getUserId());
+            ps.setString(2, wallet.getName());
+            ps.setString(3, wallet.getDescription());
 
             ps.execute();
             dataSource.getConnection().commit();
@@ -87,15 +88,16 @@ public class StockDAO {
         return false;
     }
 
-    public boolean update(Stock stock){
+    public boolean update(Wallet wallet){
         try {
-            String sql = "UPDATE stocks SET code = ?, price = ? WHERE id = ?";
+            String sql = "UPDATE wallets SET user_id = ?, name = ?, description = ? WHERE id = ?";
 
             PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
 
-            ps.setInt(1, stock.getCode());
-            ps.setDouble(2, stock.getPrice());
-            ps.setInt(3, stock.getId());
+            ps.setInt(1, wallet.getUserId());
+            ps.setString(2, wallet.getName());
+            ps.setString(3, wallet.getDescription());
+            ps.setInt(3, wallet.getId());
 
             ps.execute();
             dataSource.getConnection().commit();
@@ -114,7 +116,7 @@ public class StockDAO {
 
     public boolean delete(int id){
         try {
-            String sql = "DELETE FROM stocks WHERE id = ?";
+            String sql = "DELETE FROM wallets WHERE id = ?";
             PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
             ps.setInt(1, id);
             ps.execute();
@@ -132,14 +134,15 @@ public class StockDAO {
         return false;
     }
 
-    private Stock setStock(ResultSet rs){
+    private Wallet setWallet(ResultSet rs){
         try {
-            Stock stock = new Stock();
-            stock.setId(rs.getInt("id"));
-            stock.setCode(rs.getInt("code"));
-            stock.setPrice(rs.getDouble("price"));
+            Wallet wallet = new Wallet();
+            wallet.setId(rs.getInt("id"));
+            wallet.setUserId(rs.getInt("user_id"));
+            wallet.setName(rs.getString("name"));
+            wallet.setDescription(rs.getString("description"));
 
-            return stock;
+            return wallet;
         }
         catch (SQLException ex){
             System.err.println("Error getting " + ex.getMessage());

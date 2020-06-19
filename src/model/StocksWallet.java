@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public class StocksWallet implements Serializable {
     private int id;
-    private int stock_id;
-    private int wallet_id;
+    private int stockId;
+    private int walletId;
 
     public int getId() {
         return id;
@@ -15,20 +15,20 @@ public class StocksWallet implements Serializable {
         this.id = id;
     }
 
-    public int getStock_id() {
-        return stock_id;
+    public int getStockId() {
+        return stockId;
     }
 
-    public void setStock_id(int stock_id) {
-        this.stock_id = stock_id;
+    public void setStockId(int stockId) {
+        this.stockId = stockId;
     }
 
-    public int getWallet_id() {
-        return wallet_id;
+    public int getWalletId() {
+        return walletId;
     }
 
-    public void setWallet_id(int wallet_id) {
-        this.wallet_id = wallet_id;
+    public void setWalletId(int walletId) {
+        this.walletId = walletId;
     }
 
     public StocksWallet() {}
