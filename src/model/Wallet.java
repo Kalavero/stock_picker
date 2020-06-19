@@ -1,4 +1,4 @@
-package models;
+package model;
 
 import java.io.Serializable;
 
@@ -10,6 +10,10 @@ public class Wallet implements Serializable {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getUser_id() {
@@ -36,5 +40,5 @@ public class Wallet implements Serializable {
         this.description = description;
     }
 
-    public Wallet () {}
+    public Wallet() {}
 }

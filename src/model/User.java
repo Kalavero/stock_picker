@@ -1,18 +1,21 @@
-package models;
+package model;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 public class User implements Serializable {
     private int id;
     private String name;
     private String email;
     private String cpf;
-    private String password;
-    private String password_digest;
-    private String birthday;
+    private Date birthday;
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -39,27 +42,11 @@ public class User implements Serializable {
         this.cpf = cpf;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPassword_digest() {
-        return password_digest;
-    }
-
-    public void setPassword_digest(String password_digest) {
-        this.password_digest = password_digest;
-    }
-
-    public String getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 

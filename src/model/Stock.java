@@ -1,4 +1,4 @@
-package models;
+package model;
 
 import java.io.Serializable;
 
@@ -9,6 +9,10 @@ public class Stock implements Serializable {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public double getPrice() {
@@ -27,5 +31,5 @@ public class Stock implements Serializable {
         this.code = code;
     }
 
-    public Stock () {}
+    public Stock() {}
 }
