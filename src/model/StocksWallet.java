@@ -6,6 +6,15 @@ public class StocksWallet implements Serializable {
     private int id;
     private int stockId;
     private int walletId;
+    private int quantity;
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
     public int getId() {
         return id;
