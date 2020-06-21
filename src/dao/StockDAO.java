@@ -2,23 +2,24 @@ package dao;
 
 import model.Stock;
 
-import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class StockDAO {
-    private DataSource dataSource;
+    private Connection conn;
 
-    public StockDAO(DataSource dataSource){
-        this.dataSource = dataSource;
+    public StockDAO() {
+        try {
+            this.conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/stock_picker", "root", "");
+        }catch(SQLException ex){
+            System.err.println("Error getting " + ex.getMessage());
+        }
     }
 
     public ArrayList<Stock> all(){
         try{
             String query = "SELECT * FROM stocks";
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(query);
+            PreparedStatement ps = this.conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
             ArrayList<Stock> stocks = new ArrayList<Stock>();
@@ -45,7 +46,7 @@ public class StockDAO {
     public Stock find(int id){
         try {
             String sql = "SELECT * FROM stocks WHERE id = ? LIMIT 1";
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
+            PreparedStatement ps = this.conn.prepareStatement(sql);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
@@ -68,12 +69,12 @@ public class StockDAO {
         try {
             String sql = "INSERT INTO stocks (code, price)"
                     + "VALUES(?, ?)";
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
+            PreparedStatement ps = this.conn.prepareStatement(sql);
             ps.setInt(1, stock.getCode());
             ps.setDouble(2, stock.getPrice());
 
             ps.execute();
-            dataSource.getConnection().commit();
+            this.conn.commit();
             ps.close();
 
             return true;
@@ -91,14 +92,14 @@ public class StockDAO {
         try {
             String sql = "UPDATE stocks SET code = ?, price = ? WHERE id = ?";
 
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
+            PreparedStatement ps = this.conn.prepareStatement(sql);
 
             ps.setInt(1, stock.getCode());
             ps.setDouble(2, stock.getPrice());
             ps.setInt(3, stock.getId());
 
             ps.execute();
-            dataSource.getConnection().commit();
+            this.conn.commit();
             ps.close();
 
             return true;
@@ -115,10 +116,10 @@ public class StockDAO {
     public boolean delete(int id){
         try {
             String sql = "DELETE FROM stocks WHERE id = ?";
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
+            PreparedStatement ps = this.conn.prepareStatement(sql);
             ps.setInt(1, id);
             ps.execute();
-            dataSource.getConnection().commit();
+            this.conn.commit();
             ps.close();
 
             return true;

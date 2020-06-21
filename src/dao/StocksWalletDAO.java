@@ -8,10 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class StocksStocksWalletDAO {
+public class StocksWalletDAO {
     private DataSource dataSource;
 
-    public StocksStocksWalletDAO(DataSource dataSource){
+    public StocksWalletDAO(DataSource dataSource){
         this.dataSource = dataSource;
     }
 

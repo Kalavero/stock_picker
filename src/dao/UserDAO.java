@@ -2,23 +2,24 @@ package dao;
 
 import model.User;
 
-import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class UserDAO {
-    private DataSource dataSource;
+    private Connection conn;
 
-    public UserDAO(DataSource dataSource){
-        this.dataSource = dataSource;
+    public UserDAO(){
+        try{
+            this.conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/stock_picker", "root", "");
+        }catch (SQLException ex){
+            System.err.println(("Connection error" + ex.getMessage()));
+        }
     }
 
     public ArrayList<User> all(){
         try{
             String query = "SELECT * FROM users";
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(query);
+            PreparedStatement ps = this.conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
             ArrayList<User> users = new ArrayList<User>();
@@ -45,7 +46,7 @@ public class UserDAO {
     public User find(int id){
         try {
             String sql = "SELECT * FROM users WHERE id = ? LIMIT 1";
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
+            PreparedStatement ps = this.conn.prepareStatement(sql);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
@@ -68,14 +69,14 @@ public class UserDAO {
         try {
             String sql = "INSERT INTO users (name, cpf, email, birthday)"
                     + "VALUES(?, ?, ?, ?)";
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
+            PreparedStatement ps = this.conn.prepareStatement(sql);
             ps.setString(1, user.getName());
             ps.setString(2, user.getCpf());
             ps.setString(3, user.getEmail());
             ps.setDate(4, user.getBirthday());
 
             ps.execute();
-            dataSource.getConnection().commit();
+            this.conn.commit();
             ps.close();
 
             return true;
@@ -93,7 +94,7 @@ public class UserDAO {
         try {
             String sql = "UPDATE users SET name = ?, cpf = ?, email = ?, birthday = ? WHERE id = ?";
 
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
+            PreparedStatement ps = this.conn.prepareStatement(sql);
 
             ps.setString(1, user.getName());
             ps.setString(2, user.getCpf());
@@ -102,7 +103,7 @@ public class UserDAO {
             ps.setInt(5, user.getId());
 
             ps.execute();
-            dataSource.getConnection().commit();
+            this.conn.commit();
             ps.close();
 
             return true;
@@ -119,10 +120,10 @@ public class UserDAO {
     public boolean delete(int id){
         try {
             String sql = "DELETE FROM users WHERE id = ?";
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
+            PreparedStatement ps = this.conn.prepareStatement(sql);
             ps.setInt(1, id);
             ps.execute();
-            dataSource.getConnection().commit();
+            this.conn.commit();
             ps.close();
 
             return true;
