@@ -1,7 +1,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="model.User" %>
-<%@ page import="dao.UserDAO" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!doctype html>
 <html lang="en">
   <head>
@@ -40,9 +40,6 @@
   </nav>
 
   <div class="container-fluid">
-    <%!
-      ArrayList<User> users = new UserDAO().all();
-    %>
     <h2>Usuários</h2>
     <table class="table">
       <thead>
@@ -55,7 +52,26 @@
         </tr>
       </thead>
       <tbody>
-
+        <%
+          User user1 = new User();
+          user1.setId(1);
+          user1.setName("Andre");
+          user1.setEmail("kalavero@example.com");
+          user1.setCpf("334.338.098-90");
+          user1.setBirthday("14/11/1991");
+          ArrayList<User> users = new ArrayList<User>();
+          users.add(user1);
+          request.setAttribute("users", users);
+        %>
+        <c:forEach items="${users}" var="user">
+        <tr>
+          <td><c:out value="${user.getId()}"/></td>
+          <td><c:out value="${user.getName()}"/></td>
+          <td><c:out value="${user.getEmail()}"/></td>
+          <td><c:out value="${user.getCpf()}"/></td>
+          <td><c:out value="${user.getBirthday()}"/></td>
+        </tr>
+        </c:forEach>
       </tbody>
     </table>
   </div>
