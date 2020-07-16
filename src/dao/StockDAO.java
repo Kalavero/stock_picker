@@ -10,7 +10,7 @@ public class StockDAO {
 
     public StockDAO() {
         try {
-            this.conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/stock_picker");
+            this.conn = DriverManager.getConnection("jdbc:sqlite:stock_picker.db");
         }catch(SQLException ex){
             System.err.println("Error getting " + ex.getMessage());
         }

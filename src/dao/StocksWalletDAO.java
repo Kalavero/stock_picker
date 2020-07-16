@@ -3,22 +3,24 @@ package dao;
 import model.StocksWallet;
 
 import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class StocksWalletDAO {
-    private DataSource dataSource;
+    private Connection conn;
 
-    public StocksWalletDAO(DataSource dataSource){
-        this.dataSource = dataSource;
+    public StocksWalletDAO(){
+        try {
+            this.conn = DriverManager.getConnection("jdbc:sqlite:stock_picker.db");
+        }catch(SQLException ex){
+            System.err.println("Error getting " + ex.getMessage());
+        }
     }
 
     public ArrayList<StocksWallet> all(){
         try{
             String query = "SELECT * FROM stocks_wallets";
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(query);
+            PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
             ArrayList<StocksWallet> stocksWallets = new ArrayList<StocksWallet>();
@@ -45,7 +47,7 @@ public class StocksWalletDAO {
     public StocksWallet find(int id){
         try {
             String sql = "SELECT * FROM stocks_wallets WHERE id = ? LIMIT 1";
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
@@ -68,13 +70,13 @@ public class StocksWalletDAO {
         try {
             String sql = "INSERT INTO stocks_wallets (stock_id, wallet_id, quantity)"
                     + "VALUES(?, ?, ?)";
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, stocksWallet.getStockId());
             ps.setInt(2, stocksWallet.getWalletId());
             ps.setInt(3, stocksWallet.getQuantity());
 
             ps.execute();
-            dataSource.getConnection().commit();
+            conn.commit();
             ps.close();
 
             return true;
@@ -92,7 +94,7 @@ public class StocksWalletDAO {
         try {
             String sql = "UPDATE stocks_wallets SET stock_id = ?, wallet_id = ?, quantity = ? WHERE id = ?";
 
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1, stocksWallet.getStockId());
             ps.setInt(2, stocksWallet.getWalletId());
@@ -100,7 +102,7 @@ public class StocksWalletDAO {
             ps.setInt(3, stocksWallet.getId());
 
             ps.execute();
-            dataSource.getConnection().commit();
+            conn.commit();
             ps.close();
 
             return true;
@@ -117,10 +119,10 @@ public class StocksWalletDAO {
     public boolean delete(int id){
         try {
             String sql = "DELETE FROM stocks_wallets WHERE id = ?";
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
             ps.execute();
-            dataSource.getConnection().commit();
+            conn.commit();
             ps.close();
 
             return true;

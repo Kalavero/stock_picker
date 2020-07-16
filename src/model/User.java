@@ -8,7 +8,7 @@ public class User implements Serializable {
     private String name;
     private String email;
     private String cpf;
-    private Date birthday;
+    private String birthday;
 
     public int getId() {
         return id;
@@ -42,11 +42,11 @@ public class User implements Serializable {
         this.cpf = cpf;
     }
 
-    public Date getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 

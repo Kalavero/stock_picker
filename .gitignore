@@ -24,3 +24,6 @@ hs_err_pid*
 
 # intellij files
 .idea
+
+#database
+stock_picker.db

@@ -10,7 +10,7 @@ public class UserDAO {
 
     public UserDAO(){
         try{
-            this.conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/stock_picker", "root", "");
+            this.conn = DriverManager.getConnection("jdbc:sqlite:stock_picker.db");
         }catch (SQLException ex){
             System.err.println(("Connection error" + ex.getMessage()));
         }
@@ -73,7 +73,7 @@ public class UserDAO {
             ps.setString(1, user.getName());
             ps.setString(2, user.getCpf());
             ps.setString(3, user.getEmail());
-            ps.setDate(4, user.getBirthday());
+            ps.setString(4, user.getBirthday());
 
             ps.execute();
             this.conn.commit();
@@ -99,7 +99,7 @@ public class UserDAO {
             ps.setString(1, user.getName());
             ps.setString(2, user.getCpf());
             ps.setString(3, user.getEmail());
-            ps.setDate(4, user.getBirthday());
+            ps.setString(4, user.getBirthday());
             ps.setInt(5, user.getId());
 
             ps.execute();
@@ -144,7 +144,7 @@ public class UserDAO {
             user.setName(rs.getString("name"));
             user.setCpf(rs.getString("cpf"));
             user.setEmail(rs.getString("email"));
-            user.setBirthday(rs.getDate("birthday"));
+            user.setBirthday(rs.getString("birthday"));
 
             return user;
         }

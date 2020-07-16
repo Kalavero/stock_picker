@@ -3,22 +3,24 @@ package dao;
 import model.Wallet;
 
 import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class WalletDAO {
-    private DataSource dataSource;
+    private Connection conn;
 
-    public WalletDAO(DataSource dataSource){
-        this.dataSource = dataSource;
+    public WalletDAO(){
+        try {
+            this.conn = DriverManager.getConnection("jdbc:sqlite:stock_picker.db");
+        }catch(SQLException ex){
+            System.err.println("Error getting " + ex.getMessage());
+        }
     }
 
     public ArrayList<Wallet> all(){
         try{
             String query = "SELECT * FROM wallets";
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(query);
+            PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
             ArrayList<Wallet> wallets = new ArrayList<Wallet>();
@@ -45,7 +47,7 @@ public class WalletDAO {
     public Wallet find(int id){
         try {
             String sql = "SELECT * FROM wallets WHERE id = ? LIMIT 1";
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
@@ -68,13 +70,13 @@ public class WalletDAO {
         try {
             String sql = "INSERT INTO wallets (user_id, name, description)"
                     + "VALUES(?, ?, ?)";
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, wallet.getUserId());
             ps.setString(2, wallet.getName());
             ps.setString(3, wallet.getDescription());
 
             ps.execute();
-            dataSource.getConnection().commit();
+            conn.commit();
             ps.close();
 
             return true;
@@ -92,7 +94,7 @@ public class WalletDAO {
         try {
             String sql = "UPDATE wallets SET user_id = ?, name = ?, description = ? WHERE id = ?";
 
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1, wallet.getUserId());
             ps.setString(2, wallet.getName());
@@ -100,7 +102,7 @@ public class WalletDAO {
             ps.setInt(3, wallet.getId());
 
             ps.execute();
-            dataSource.getConnection().commit();
+            conn.commit();
             ps.close();
 
             return true;
@@ -117,10 +119,10 @@ public class WalletDAO {
     public boolean delete(int id){
         try {
             String sql = "DELETE FROM wallets WHERE id = ?";
-            PreparedStatement ps = dataSource.getConnection().prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
             ps.execute();
-            dataSource.getConnection().commit();
+            conn.commit();
             ps.close();
 
             return true;
